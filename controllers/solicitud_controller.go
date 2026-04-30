@@ -101,3 +101,24 @@ func CreateSolicitud(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 201, s)
 }
+
+func UpdateSolicitud(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	var s models.SolicitudEntrenador
+	json.NewDecoder(r.Body).Decode(&s)
+
+	_, err := config.DB.Exec(
+		`UPDATE solicitudes_entrenador SET usuario_id=$1, gimnasio_id=$2,
+		nombres_apellidos=$3, cedula=$4, experiencia=$5, sobre_mi=$6,
+		especialidad=$7, whatsapp=$8, correo=$9, direccion=$10,
+		estado=$11, revisado_por=$12, activo=$13 WHERE id=$14`,
+		s.UsuarioID, s.GimnasioID, s.NombresApellidos, s.Cedula,
+		s.Experiencia, s.SobreMi, s.Especialidad, s.Whatsapp,
+		s.Correo, s.Direccion, s.Estado, s.RevisadoPor, s.Activo, id,
+	)
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 200, map[string]string{"message": "Solicitud actualizada correctamente"})
+}
