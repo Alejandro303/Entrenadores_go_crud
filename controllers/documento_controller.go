@@ -83,3 +83,21 @@ func CreateDocumento(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 201, d)
 }
+
+
+func UpdateDocumento(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	var d models.EntrenadorDocumento
+	json.NewDecoder(r.Body).Decode(&d)
+
+	_, err := config.DB.Exec(
+		`UPDATE entrenador_documentos SET entrenador_id=$1, identificacion=$2,
+		nombre_archivo=$3, activo=$4 WHERE id=$5`,
+		d.EntrenadorID, d.Identificacion, d.NombreArchivo, d.Activo, id,
+	)
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 200, map[string]string{"message": "Documento actualizado correctamente"})
+}
