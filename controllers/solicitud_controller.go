@@ -77,3 +77,27 @@ func GetSolicitudByID(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 200, s)
 }
+
+func CreateSolicitud(w http.ResponseWriter, r *http.Request) {
+	var s models.SolicitudEntrenador
+	if err := json.NewDecoder(r.Body).Decode(&s); err != nil {
+		respondJSON(w, 400, map[string]string{"error": "JSON inválido"})
+		return
+	}
+
+	err := config.DB.QueryRow(
+		`INSERT INTO solicitudes_entrenador (usuario_id, gimnasio_id, nombres_apellidos,
+		cedula, experiencia, sobre_mi, especialidad, whatsapp, correo, direccion,
+		estado, revisado_por, activo)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING id`,
+		s.UsuarioID, s.GimnasioID, s.NombresApellidos, s.Cedula,
+		s.Experiencia, s.SobreMi, s.Especialidad, s.Whatsapp,
+		s.Correo, s.Direccion, s.Estado, s.RevisadoPor, s.Activo,
+	).Scan(&s.ID)
+
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 201, s)
+}
