@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"API_ENTRENADORES/config"
-	"API_ENTRENADORES/models"
+	"ENTRENADORES_GO_CRUD/config"
+	"ENTRENADORES_GO_CRUD/models"
 	"database/sql"
 	"encoding/json"
 	"net/http"

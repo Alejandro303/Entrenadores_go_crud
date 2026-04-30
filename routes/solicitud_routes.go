@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"API_ENTRENADORES/controllers"
+	"ENTRENADORES_GO_CRUD/controllers"
 	"github.com/gorilla/mux"
 )
 
