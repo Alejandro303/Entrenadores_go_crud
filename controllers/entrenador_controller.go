@@ -82,3 +82,28 @@ func GetEntrenadorByID(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 200, e)
 }
+
+
+func CreateEntrenador(w http.ResponseWriter, r *http.Request) {
+	var e models.Entrenador
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		respondJSON(w, 400, map[string]string{"error": "JSON inválido"})
+		return
+	}
+
+	err := config.DB.QueryRow(
+		`INSERT INTO entrenadores (id_adminitrador, cedula, descripcion, especialidad,
+		gimnasio_id, anios_experiencia, foto_url, aprovacion_entrenador, hoja_vida,
+		calificacion_prom, activo)
+		VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id_entrenadores`,
+		e.IDAdministrador, e.Cedula, e.Descripcion, e.Especialidad,
+		e.GimnasioID, e.AniosExperiencia, e.FotoURL, e.AprovacionEntrenador,
+		e.HojaVida, e.CalificacionProm, e.Activo,
+	).Scan(&e.IDEntrenadores)
+
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 201, e)
+}
