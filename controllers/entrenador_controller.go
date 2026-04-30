@@ -107,3 +107,23 @@ func CreateEntrenador(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 201, e)
 }
+
+func UpdateEntrenador(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	var e models.Entrenador
+	json.NewDecoder(r.Body).Decode(&e)
+
+	_, err := config.DB.Exec(
+		`UPDATE entrenadores SET id_adminitrador=$1, cedula=$2, descripcion=$3, especialidad=$4,
+		gimnasio_id=$5, anios_experiencia=$6, foto_url=$7, aprovacion_entrenador=$8,
+		hoja_vida=$9, calificacion_prom=$10, activo=$11 WHERE id_entrenadores=$12`,
+		e.IDAdministrador, e.Cedula, e.Descripcion, e.Especialidad,
+		e.GimnasioID, e.AniosExperiencia, e.FotoURL, e.AprovacionEntrenador,
+		e.HojaVida, e.CalificacionProm, e.Activo, id,
+	)
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 200, map[string]string{"message": "Entrenador actualizado correctamente"})
+}
