@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"API_ENTRENADORES/config"
-	"API_ENTRENADORES/routes"
+	"ENTRENADORES_GO_CRUD/config"
+	"ENTRENADORES_GO_CRUD/routes"
 
 	"github.com/gorilla/mux"
 )
