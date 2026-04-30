@@ -54,3 +54,31 @@ func GetAllEntrenadores(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 200, lista)
 }
+
+
+func GetEntrenadorByID(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	var e models.Entrenador
+
+	err := config.DB.QueryRow(
+		`SELECT id_entrenadores, id_adminitrador, cedula, descripcion, especialidad,
+		gimnasio_id, anios_experiencia, foto_url, aprovacion_entrenador, hoja_vida,
+		calificacion_prom, activo, fecha_modificacion, fecha_creacion
+		FROM entrenadores WHERE id_entrenadores=$1`, id,
+	).Scan(
+		&e.IDEntrenadores, &e.IDAdministrador, &e.Cedula, &e.Descripcion,
+		&e.Especialidad, &e.GimnasioID, &e.AniosExperiencia, &e.FotoURL,
+		&e.AprovacionEntrenador, &e.HojaVida, &e.CalificacionProm,
+		&e.Activo, &e.FechaModificacion, &e.FechaCreacion,
+	)
+
+	if err == sql.ErrNoRows {
+		respondJSON(w, 404, map[string]string{"error": "Entrenador no encontrado"})
+		return
+	}
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 200, e)
+}
