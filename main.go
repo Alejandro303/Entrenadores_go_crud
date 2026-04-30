@@ -22,3 +22,16 @@ func enableCORS(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
+func main() {
+	config.ConnectDB()
+
+	r := mux.NewRouter()
+
+	routes.RegisterEntrenadorRoutes(r)
+	routes.RegisterDocumentoRoutes(r)
+	routes.RegisterSolicitudRoutes(r)
+
+	log.Println("Servidor corriendo en el puerto 8083")
+	http.ListenAndServe(":8083", enableCORS(r))
+}
