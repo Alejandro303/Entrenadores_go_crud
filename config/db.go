@@ -15,7 +15,7 @@ func ConnectDB() {
 	port     := 5432
 	user     := "postgres"
 	password := "postgres"           // <-- Cambia esto
-	dbname   := "proyecto_the_house_fit" // <-- Cambia esto
+	dbname   := "ENTRENADORES_GO_CRUD" // <-- Cambia esto
 	schema   := "entrenadores"
 
 	psqlInfo := fmt.Sprintf(
