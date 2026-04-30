@@ -101,3 +101,14 @@ func UpdateDocumento(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 200, map[string]string{"message": "Documento actualizado correctamente"})
 }
+
+
+func DeleteDocumento(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	_, err := config.DB.Exec("DELETE FROM entrenador_documentos WHERE id=$1", id)
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 200, map[string]string{"message": "Documento eliminado correctamente"})
+}
