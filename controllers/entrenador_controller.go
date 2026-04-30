@@ -127,3 +127,14 @@ func UpdateEntrenador(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 200, map[string]string{"message": "Entrenador actualizado correctamente"})
 }
+
+
+func DeleteEntrenador(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	_, err := config.DB.Exec("DELETE FROM entrenadores WHERE id_entrenadores=$1", id)
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 200, map[string]string{"message": "Entrenador eliminado correctamente"})
+}
