@@ -14,7 +14,7 @@ func ConnectDB() {
 	host     := "localhost"
 	port     := 5432
 	user     := "postgres"
-	password := "tu_password"           // <-- Cambia esto
+	password := "postgres"           // <-- Cambia esto
 	dbname   := "proyecto_the_house_fit" // <-- Cambia esto
 	schema   := "entrenadores"
 
