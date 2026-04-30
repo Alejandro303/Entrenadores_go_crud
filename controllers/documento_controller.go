@@ -62,3 +62,24 @@ func GetDocumentoByID(w http.ResponseWriter, r *http.Request) {
 	}
 	respondJSON(w, 200, d)
 }
+
+
+func CreateDocumento(w http.ResponseWriter, r *http.Request) {
+	var d models.EntrenadorDocumento
+	if err := json.NewDecoder(r.Body).Decode(&d); err != nil {
+		respondJSON(w, 400, map[string]string{"error": "JSON inválido"})
+		return
+	}
+
+	err := config.DB.QueryRow(
+		`INSERT INTO entrenador_documentos (entrenador_id, identificacion, nombre_archivo, activo)
+		VALUES ($1,$2,$3,$4) RETURNING id`,
+		d.EntrenadorID, d.Identificacion, d.NombreArchivo, d.Activo,
+	).Scan(&d.ID)
+
+	if err != nil {
+		respondJSON(w, 500, map[string]string{"error": err.Error()})
+		return
+	}
+	respondJSON(w, 201, d)
+}
